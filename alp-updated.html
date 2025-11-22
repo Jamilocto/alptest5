@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Visibility Board – ALP Middle & Skill Centres</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #e5e5e5;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .page-wrapper {
+      max-width: 1200px;
+      width: 100%;
+      padding: 32px 16px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .welcome-box {
+      background: #f7f7f7;
+      border-radius: 12px;
+      padding: 24px 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      text-align: center;
+    }
+    .welcome-box h1 {
+      margin: 0;
+      font-size: 26px;
+      font-weight: 700;
+    }
+    .welcome-box p {
+      margin: 6px 0 0;
+      font-size: 18px;
+      font-weight: 500;
+    }
+    .visibility-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .visibility-buttons button {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 24px;
+      font-size: 15px;
+      cursor: pointer;
+      font-weight: 600;
+      background: #0056a7;
+      color: #ffffff;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.15s;
+    }
+    .visibility-buttons button.dutch { background: #a81f64; }
+    .visibility-buttons button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    }
+    .visibility-buttons button:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+    .artwork-section {
+      background: #fdfdfd;
+      border-radius: 12px;
+      padding: 18px 18px 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .artwork-section.active { display: flex; }
+    .artwork-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .artwork-note {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+    .artwork-inner {
+      margin: 0 auto;
+      background: #ffffff;
+      width: 100%;
+      max-width: 1050px;
+      aspect-ratio: 297 / 210;
+      border: 1px solid #ddd;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .artwork-top,
+    .artwork-bottom {
+      width: 100%;
+    }
+    .artwork-header-img,
+    .artwork-footer-img {
+      width: 100%;
+      display: block;
+    }
+    .artwork-middle {
+      flex: 1;
+      padding: 24px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 16px;
+      background: #ffffff;
+    }
+    .logos-row,
+    .programme-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .logos-row img,
+    .programme-row img {
+      max-height: 70px;
+      width: auto;
+    }
+    .programme-row {
+      margin-top: 6px;
+      margin-bottom: 10px;
+    }
+    .fields-grid {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      column-gap: 40px;
+      row-gap: 10px;
+      font-size: 14px;
+    }
+    .field-row.full-width {
+      grid-column: 1 / -1;
+    }
+    .field-label {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .field-input {
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid #666;
+      padding: 4px 2px 2px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      background: transparent;
+    }
+    .field-input::placeholder {
+      color: #bbb;
+    }
+    .artwork-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
+    .artwork-actions button {
+      border-radius: 6px;
+      padding: 8px 14px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      background: #444;
+      color: #fff;
+      transition: background 0.15s, transform 0.08s, box-shadow 0.08s;
+    }
+    .artwork-actions button.secondary { background: #777; }
+    .artwork-actions button.danger { background: #b70000; }
+    .artwork-actions button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .artwork-actions button:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+    footer {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 13px;
+      color: #444;
+    }
+  </style>
+
+  <!-- Use the local html2pdf file sitting in the same folder -->
+  <script src="html2pdf.bundle.min.js"></script>
+</head>
+<body>
+  <div class="page-wrapper">
+    <section class="welcome-box">
+      <h1>Welcome</h1>
+      <p>Visibility Board for ALP Middle &amp; Skill Centers</p>
+      <div class="visibility-buttons">
+        <button data-target="eu" class="eu">EU Visibility (E)</button>
+        <button data-target="dutch" class="dutch">Dutch Visibility (G)</button>
+      </div>
+    </section>
+
+    <!-- EU ARTWORK -->
+    <section id="section-eu" class="artwork-section">
+      <div class="artwork-title">EU Visibility – ALP Middle &amp; Skill Centre</div>
+      <div class="artwork-note">Type in the fields; the artwork design stays exactly the same.</div>
+      <div class="artwork-inner" id="artwork-eu-inner">
+        <div class="artwork-top">
+          <img src="E-Header.svg" alt="EU Header" class="artwork-header-img" />
+        </div>
+        <div class="artwork-middle">
+          <div class="logos-row">
+            <img src="E-Logos.svg" alt="EU Logos" />
+          </div>
+          <div class="programme-row">
+            <img src="E-Programme Name.svg" alt="ALP Middle & Skill Centre" />
+          </div>
+          <div class="fields-grid">
+            <div class="field-row">
+              <div class="field-label">Centre</div>
+              <input class="field-input" type="text" name="centre_eu" placeholder="Enter centre name" />
+            </div>
+            <div class="field-row">
+              <div class="field-label">District</div>
+              <input class="field-input" type="text" name="district_eu" placeholder="Enter district" />
+            </div>
+            <div class="field-row">
+              <div class="field-label">NFEMIS Code</div>
+              <input class="field-input" type="text" name="nfemis_eu" placeholder="Enter NFEMIS code" />
+            </div>
+            <div class="field-row">
+              <div class="field-label">Enrollment</div>
+              <input class="field-input" type="text" name="enrollment_eu" placeholder="Enter enrollment" />
+            </div>
+            <div class="field-row">
+              <div class="field-label">Skill</div>
+              <input class="field-input" type="text" name="skill_eu" placeholder="Enter skill" />
+            </div>
+            <div class="field-row">
+              <div class="field-label">Project Grant</div>
+              <input class="field-input" type="text" name="grant_eu" placeholder="Enter project grant" />
+            </div>
+            <div class="field-row full-width">
+              <div class="field-label">Nature of Work</div>
+              <input class="field-input" type="text" name="nature_eu" placeholder="Enter nature of work" />
+            </div>
+          </div>
+        </div>
+        <div class="artwork-bottom">
+          <img src="E-Footer.svg" alt="EU Footer" class="artwork-footer-img" />
+        </div>
+      </div>
+      <div class="artwork-actions">
+        <button onclick="downloadPdf('artwork-eu-inner', 'EU_Visibility_Board')">Download PDF</button>
+        <button class="secondary" onclick="printProof('artwork-eu-inner')">Print for Proofread</button>
+        <button class="danger" onclick="clearText('artwork-eu-inner')">Clear the text</button>
+      </div>
+    </section>
+
+    <!-- DUTCH ARTWORK -->
+    <section id="section-dutch" class="artwork-section">
+      <div class="artwork-title">Dutch Visibility – ALP Middle &amp; Skill Centre</div>
+      <div class="artwork-note">Type in the fields; the artwork design stays exactly the same.</div>
+      <div class="artwork-inner" id="artwork-dutch-inner">
+        <div class="artwork-top">
+          <img src="G-Header.svg" alt="Dutch Header" class="artwork-header-img" />
+        </div>
+        <div class="artwork-middle">
+          <div class="logos-row">
+            <img src="G-Logos.svg" alt="Dutch Logos" />
+          </div>
+          <div class="programme-row">
+            <img src="G-Programme Name.svg" alt="ALP Middle & Skill Centre" />
+          </div>
+          <div class="fields-grid">
+            <div class="field-row">
+              <div class="field-label">Centre</div>
+              <input class="field-input" type="text" name="centre_g" placeholder="Enter centre name" />
+            </div>
+            <div class="field-row">
+              <div class="field-label">District</div>
+              <input class="field-input" type="text" name="district_g" placeholder="Enter district" />
+            </div>
+            <div class="field-row">
+              <div class="field-label">NFEMIS Code</div>
+              <input class="field-input" type="text" name="nfemis_g" placeholder="Enter NFEMIS code" />
+            </div>
+            <div class="field-row">
+              <div class="field-label">Enrollment</div>
+              <input class="field-input" type="text" name="enrollment_g" placeholder="Enter enrollment" />
+            </div>
+            <div class="field-row">
+              <div class="field-label">Skill</div>
+              <input class="field-input" type="text" name="skill_g" placeholder="Enter skill" />
+            </div>
+            <div class="field-row">
+              <div class="field-label">Project Grant</div>
+              <input class="field-input" type="text" name="grant_g" placeholder="Enter project grant" />
+            </div>
+            <div class="field-row full-width">
+              <div class="field-label">Nature of Work</div>
+              <input class="field-input" type="text" name="nature_g" placeholder="Enter nature of work" />
+            </div>
+          </div>
+        </div>
+        <div class="artwork-bottom">
+          <img src="G-Footer.svg" alt="Dutch Footer" class="artwork-footer-img" />
+        </div>
+      </div>
+      <div class="artwork-actions">
+        <button onclick="downloadPdf('artwork-dutch-inner', 'Dutch_Visibility_Board')">Download PDF</button>
+        <button class="secondary" onclick="printProof('artwork-dutch-inner')">Print for Proofread</button>
+        <button class="danger" onclick="clearText('artwork-dutch-inner')">Clear the text</button>
+      </div>
+    </section>
+
+    <footer>
+      Designed by: JAMIL (ESP-UNICEF)
+    </footer>
+  </div>
+
+  <script>
+    // Show/hide EU or Dutch artwork
+    document.querySelectorAll(".visibility-buttons button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const target = btn.dataset.target;
+        document.querySelectorAll(".artwork-section").forEach((s) => s.classList.remove("active"));
+        if (target === "eu") {
+          document.getElementById("section-eu").classList.add("active");
+        } else {
+          document.getElementById("section-dutch").classList.add("active");
+        }
+        const activeSection = document.querySelector(".artwork-section.active");
+        if (activeSection) {
+          activeSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    });
+
+    function clearText(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.querySelectorAll("input.field-input").forEach((input) => {
+        input.value = "";
+      });
+    }
+
+    function downloadPdf(containerId, filename) {
+      const element = document.getElementById(containerId);
+      if (!element) return;
+
+      // if html2pdf is missing for some reason, fall back to print
+      if (typeof html2pdf === "undefined") {
+        alert("PDF tool not available. The browser will open Print; choose 'Save as PDF'.");
+        window.print();
+        return;
+      }
+
+      const opt = {
+        margin: 5,
+        filename: filename + ".pdf",
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: "pt", format: "a4", orientation: "landscape" },
+      };
+      html2pdf().set(opt).from(element).save();
+    }
+
+    function printProof(containerId) {
+      const element = document.getElementById(containerId);
+      if (!element) return;
+
+      const clone = element.cloneNode(true);
+      const win = window.open("", "_blank");
+      win.document.open();
+      win.document.write(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8" />
+            <title>Print Proof</title>
+            <style>
+              * { box-sizing: border-box; }
+              body { margin: 0; padding: 0; }
+              .artwork-inner {
+                width: 100%;
+                max-width: 1050px;
+                margin: 0 auto;
+              }
+              input.field-input {
+                border: none;
+                border-bottom: 1px solid #666;
+                padding: 4px 2px 2px;
+                font-size: 14px;
+                font-family: inherit;
+                background: transparent;
+              }
+              @page {
+                size: A4 landscape;
+                margin: 10mm;
+              }
+            </style>
+          </head>
+          <body></body>
+        </html>
+      `);
+      win.document.body.appendChild(clone);
+      win.document.close();
+      win.focus();
+      win.print();
+    }
+  </script>
+</body>
+</html>
