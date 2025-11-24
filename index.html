@@ -29,7 +29,7 @@
       background: #f7f7f7;
       border-radius: 12px;
       padding: 24px 20px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
       text-align: center;
     }
     .welcome-box h1 {
@@ -75,7 +75,7 @@
       background: #fdfdfd;
       border-radius: 12px;
       padding: 18px 18px 20px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
       display: none;
       flex-direction: column;
       gap: 16px;
@@ -93,12 +93,12 @@
       margin-bottom: 10px;
     }
 
-    /* Board with full artwork JPG as background */
+    /* Board: full artwork as background */
     .board-wrapper {
       margin: 0 auto;
       width: 100%;
       max-width: 1050px;
-      aspect-ratio: 1152 / 768; /* same ratio as your board JPGs */
+      aspect-ratio: 1152 / 768; /* your board ratio */
       border: 1px solid #ddd;
       background-size: cover;
       background-position: center;
@@ -106,21 +106,50 @@
       overflow: hidden;
     }
 
-    /* Editable text fields on the lines */
-    .board-input {
+    /* White panel that covers the middle area where we draw our own fields */
+    .fields-panel {
       position: absolute;
-      border: none;
-      background: transparent;
-      font-size: 16px;
-      font-family: inherit;
-      color: #000;
-      padding: 0;
-      margin: 0;
-      outline: none;
-      text-align: left;
+      left: 7%;
+      right: 7%;
+      top: 37%;   /* just below programme name */
+      bottom: 12%; /* just above footer strip */
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      padding: 12px 12px 4px;
     }
-    .board-input::placeholder {
-      color: rgba(0,0,0,0.45);
+
+    .fields-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      column-gap: 40px;
+      row-gap: 14px;
+      font-size: 14px;
+    }
+
+    .field-row.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .field-label {
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .field-input {
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid #666;
+      padding: 4px 2px 2px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      background: transparent;
+    }
+
+    .field-input::placeholder {
+      color: rgba(0,0,0,0.4);
     }
 
     .artwork-actions {
@@ -181,22 +210,48 @@
       <div class="artwork-note">Type on the lines; the blue EU artwork stays as is.</div>
 
       <div class="board-wrapper" id="board-eu" style="background-image:url('E-.jpg');">
-        <!-- Row 1: Centre / District -->
-        <input class="board-input" style="top:58%; left:13%; width:34%;" />
-        <input class="board-input" style="top:58%; left:57%; width:30%;" />
+        <div class="fields-panel">
+          <div class="fields-grid">
+            <!-- Row 1: Centre / District -->
+            <div class="field-row">
+              <div class="field-label">Centre</div>
+              <input class="field-input" type="text" name="centre_eu" />
+            </div>
+            <div class="field-row">
+              <div class="field-label">District</div>
+              <input class="field-input" type="text" name="district_eu" />
+            </div>
 
-        <!-- Row 2: NFEMIS Code (left only) -->
-        <input class="board-input" style="top:64.5%; left:19%; width:30%;" />
+            <!-- Row 2: NFEMIS Code -->
+            <div class="field-row">
+              <div class="field-label">NFEMIS Code</div>
+              <input class="field-input" type="text" name="nfemis_eu" />
+            </div>
+            <div class="field-row"></div> <!-- empty right cell -->
 
-        <!-- Row 3: Skill (wide) -->
-        <input class="board-input" style="top:71.5%; left:13%; width:74%;" />
+            <!-- Row 3: Skill -->
+            <div class="field-row full-width">
+              <div class="field-label">Skill</div>
+              <input class="field-input" type="text" name="skill_eu" />
+            </div>
 
-        <!-- Row 4: Project Grant / Enrollment -->
-        <input class="board-input" style="top:78.5%; left:23%; width:25%;" />
-        <input class="board-input" style="top:78.5%; left:65%; width:23%;" />
+            <!-- Row 4: Project Grant / Enrollment -->
+            <div class="field-row">
+              <div class="field-label">Project Grant</div>
+              <input class="field-input" type="text" name="grant_eu" />
+            </div>
+            <div class="field-row">
+              <div class="field-label">Enrollment</div>
+              <input class="field-input" type="text" name="enrollment_eu" />
+            </div>
 
-        <!-- Row 5: Nature of Work -->
-        <input class="board-input" style="top:86%; left:23%; width:64%;" />
+            <!-- Row 5: Nature of Work -->
+            <div class="field-row full-width">
+              <div class="field-label">Nature of Work</div>
+              <input class="field-input" type="text" name="nature_eu" />
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="artwork-actions">
@@ -212,22 +267,48 @@
       <div class="artwork-note">Type on the lines; the magenta Dutch artwork stays as is.</div>
 
       <div class="board-wrapper" id="board-dutch" style="background-image:url('G-.jpg');">
-        <!-- Row 1: Centre / District -->
-        <input class="board-input" style="top:58%; left:13%; width:34%;" />
-        <input class="board-input" style="top:58%; left:57%; width:30%;" />
+        <div class="fields-panel">
+          <div class="fields-grid">
+            <!-- Row 1: Centre / District -->
+            <div class="field-row">
+              <div class="field-label">Centre</div>
+              <input class="field-input" type="text" name="centre_g" />
+            </div>
+            <div class="field-row">
+              <div class="field-label">District</div>
+              <input class="field-input" type="text" name="district_g" />
+            </div>
 
-        <!-- Row 2: NFEMIS Code (left only) -->
-        <input class="board-input" style="top:64.5%; left:19%; width:30%;" />
+            <!-- Row 2: NFEMIS Code -->
+            <div class="field-row">
+              <div class="field-label">NFEMIS Code</div>
+              <input class="field-input" type="text" name="nfemis_g" />
+            </div>
+            <div class="field-row"></div>
 
-        <!-- Row 3: Skill (wide) -->
-        <input class="board-input" style="top:71.5%; left:13%; width:74%;" />
+            <!-- Row 3: Skill -->
+            <div class="field-row full-width">
+              <div class="field-label">Skill</div>
+              <input class="field-input" type="text" name="skill_g" />
+            </div>
 
-        <!-- Row 4: Project Grant / Enrollment -->
-        <input class="board-input" style="top:78.5%; left:23%; width:25%;" />
-        <input class="board-input" style="top:78.5%; left:65%; width:23%;" />
+            <!-- Row 4: Project Grant / Enrollment -->
+            <div class="field-row">
+              <div class="field-label">Project Grant</div>
+              <input class="field-input" type="text" name="grant_g" />
+            </div>
+            <div class="field-row">
+              <div class="field-label">Enrollment</div>
+              <input class="field-input" type="text" name="enrollment_g" />
+            </div>
 
-        <!-- Row 5: Nature of Work -->
-        <input class="board-input" style="top:86%; left:23%; width:64%;" />
+            <!-- Row 5: Nature of Work -->
+            <div class="field-row full-width">
+              <div class="field-label">Nature of Work</div>
+              <input class="field-input" type="text" name="nature_g" />
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="artwork-actions">
@@ -255,7 +336,7 @@
     function clearText(boardId) {
       const board = document.getElementById(boardId);
       if (!board) return;
-      board.querySelectorAll(".board-input").forEach(inp => inp.value = "");
+      board.querySelectorAll(".field-input").forEach(inp => inp.value = "");
     }
 
     // Download PDF using html2pdf
@@ -300,10 +381,13 @@
                 max-width: 1050px;
                 margin: 0 auto;
               }
-              .board-input {
+              .field-input {
                 border: none;
-                background: transparent;
+                border-bottom: 1px solid #666;
+                padding: 4px 2px 2px;
+                font-size: 14px;
                 font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                background: transparent;
               }
               @page {
                 size: A4 landscape;
