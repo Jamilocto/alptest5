@@ -400,24 +400,38 @@
       board.querySelectorAll(".field-input").forEach(inp => inp.value = "");
     }
 
-    function downloadPdf(boardId, filename) {
-      const element = document.getElementById(boardId);
-      if (!element || typeof html2pdf === "undefined") {
-        alert("PDF tool not available. Use 'Print for Proofread' and choose 'Save as PDF'.");
-        window.print();
-        return;
-      }
+function downloadPdf(boardId, filename) {
+  const element = document.getElementById(boardId);
+  if (!element || typeof html2pdf === "undefined") {
+    alert("PDF tool not available. Use 'Print for Proofread' and choose 'Save as PDF'.");
+    window.print();
+    return;
+  }
 
-      const opt = {
-        margin: 0,
-        filename: filename + ".pdf",
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: "pt", format: "a4", orientation: "landscape" }
-      };
+  // These numbers match your board artwork (≈ 1152 x 768)
+  const pdfWidth  = 1152;
+  const pdfHeight = 768;
 
-      html2pdf().set(opt).from(element).save();
+  const opt = {
+    margin: 0,
+    filename: filename + ".pdf",
+    image: { type: "jpeg", quality: 1 },           // best quality
+    html2canvas: {
+      scale: 3,                                    // higher DPI
+      useCORS: true,
+      scrollX: 0,
+      scrollY: 0
+    },
+    jsPDF: {
+      unit: "px",                                  // work in pixels
+      format: [pdfWidth, pdfHeight],               // same aspect as artwork
+      orientation: "landscape"
     }
+  };
+
+  html2pdf().set(opt).from(element).save();
+}
+
 
     function printProof(boardId) {
       const element = document.getElementById(boardId);
@@ -465,3 +479,4 @@
   </script>
 </body>
 </html>
+
