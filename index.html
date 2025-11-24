@@ -93,88 +93,34 @@
       margin-bottom: 10px;
     }
 
-    .artwork-inner {
+    /* Board with full artwork JPG as background */
+    .board-wrapper {
       margin: 0 auto;
-      background: #ffffff;
       width: 100%;
       max-width: 1050px;
-      aspect-ratio: 297 / 210;  /* A4 landscape-ish */
+      aspect-ratio: 1152 / 768; /* same ratio as your board JPGs */
       border: 1px solid #ddd;
+      background-size: cover;
+      background-position: center;
+      position: relative;
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
     }
 
-    .artwork-top,
-    .artwork-bottom {
-      width: 100%;
-    }
-
-    .artwork-header-img,
-    .artwork-footer-img {
-      width: 100%;
-      display: block;
-    }
-
-    .artwork-middle {
-      flex: 1;
-      padding: 24px 40px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      gap: 16px;
-      background: #ffffff;
-    }
-
-    .logos-row,
-    .programme-row {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .logos-row img,
-    .programme-row img {
-      max-height: 70px;
-      width: auto;
-    }
-
-    .programme-row {
-      margin-top: 6px;
-      margin-bottom: 10px;
-    }
-
-    .fields-grid {
-      margin-top: 12px;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      column-gap: 40px;
-      row-gap: 10px;
-      font-size: 14px;
-    }
-
-    .field-row.full-width {
-      grid-column: 1 / -1;
-    }
-
-    .field-label {
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
-
-    .field-input {
-      width: 100%;
+    /* Editable text fields on the lines */
+    .board-input {
+      position: absolute;
       border: none;
-      border-bottom: 1px solid #666;
-      padding: 4px 2px 2px;
-      font-size: 14px;
-      font-family: inherit;
-      outline: none;
       background: transparent;
+      font-size: 16px;
+      font-family: inherit;
+      color: #000;
+      padding: 0;
+      margin: 0;
+      outline: none;
+      text-align: left;
     }
-
-    .field-input::placeholder {
-      color: #bbb;
+    .board-input::placeholder {
+      color: rgba(0,0,0,0.45);
     }
 
     .artwork-actions {
@@ -214,7 +160,6 @@
     }
   </style>
 
-  <!-- local html2pdf library -->
   <script src="html2pdf.bundle.min.js"></script>
 </head>
 <body>
@@ -225,144 +170,70 @@
       <p>Visibility Board for ALP Middle &amp; Skill Centers</p>
 
       <div class="visibility-buttons">
-        <button data-target="eu" class="eu">EU Visibility (E)</button>
+        <button data-target="eu">EU Visibility (E)</button>
         <button data-target="dutch" class="dutch">Dutch Visibility (G)</button>
       </div>
     </section>
 
-    <!-- EU ARTWORK (E) -->
+    <!-- EU board -->
     <section id="section-eu" class="artwork-section">
       <div class="artwork-title">EU Visibility – ALP Middle &amp; Skill Centre</div>
-      <div class="artwork-note">Type in the fields; the artwork design stays exactly the same.</div>
+      <div class="artwork-note">Type on the lines; the blue EU artwork stays as is.</div>
 
-      <div class="artwork-inner" id="artwork-eu-inner">
-        <div class="artwork-top">
-          <img src="E-Header.svg" alt="EU Header" class="artwork-header-img" />
-        </div>
+      <div class="board-wrapper" id="board-eu" style="background-image:url('E-.jpg');">
+        <!-- Row 1: Centre / District -->
+        <input class="board-input" style="top:58%; left:13%; width:34%;" />
+        <input class="board-input" style="top:58%; left:57%; width:30%;" />
 
-        <div class="artwork-middle">
-          <div class="logos-row">
-            <img src="E-Logos.svg" alt="EU Logos" />
-          </div>
-          <div class="programme-row">
-            <img src="E-Programme Name.svg" alt="ALP Middle & Skill Centre" />
-          </div>
+        <!-- Row 2: NFEMIS Code (left only) -->
+        <input class="board-input" style="top:64.5%; left:19%; width:30%;" />
 
-          <div class="fields-grid">
-            <div class="field-row">
-              <div class="field-label">Centre</div>
-              <input class="field-input" type="text" name="centre_eu" placeholder="Enter centre name" />
-            </div>
+        <!-- Row 3: Skill (wide) -->
+        <input class="board-input" style="top:71.5%; left:13%; width:74%;" />
 
-            <div class="field-row">
-              <div class="field-label">District</div>
-              <input class="field-input" type="text" name="district_eu" placeholder="Enter district" />
-            </div>
+        <!-- Row 4: Project Grant / Enrollment -->
+        <input class="board-input" style="top:78.5%; left:23%; width:25%;" />
+        <input class="board-input" style="top:78.5%; left:65%; width:23%;" />
 
-            <div class="field-row">
-              <div class="field-label">NFEMIS Code</div>
-              <input class="field-input" type="text" name="nfemis_eu" placeholder="Enter NFEMIS code" />
-            </div>
-
-            <div class="field-row">
-              <div class="field-label">Enrollment</div>
-              <input class="field-input" type="text" name="enrollment_eu" placeholder="Enter enrollment" />
-            </div>
-
-            <div class="field-row">
-              <div class="field-label">Skill</div>
-              <input class="field-input" type="text" name="skill_eu" placeholder="Enter skill" />
-            </div>
-
-            <div class="field-row">
-              <div class="field-label">Project Grant</div>
-              <input class="field-input" type="text" name="grant_eu" placeholder="Enter project grant" />
-            </div>
-
-            <div class="field-row full-width">
-              <div class="field-label">Nature of Work</div>
-              <input class="field-input" type="text" name="nature_eu" placeholder="Enter nature of work" />
-            </div>
-          </div>
-        </div>
-
-        <div class="artwork-bottom">
-          <img src="E-Footer.svg" alt="EU Footer" class="artwork-footer-img" />
-        </div>
+        <!-- Row 5: Nature of Work -->
+        <input class="board-input" style="top:86%; left:23%; width:64%;" />
       </div>
 
       <div class="artwork-actions">
-        <button onclick="downloadPdf('artwork-eu-inner', 'EU_Visibility_Board')">Download PDF</button>
-        <button class="secondary" onclick="printProof('artwork-eu-inner')">Print for Proofread</button>
-        <button class="danger" onclick="clearText('artwork-eu-inner')">Clear the text</button>
+        <button onclick="downloadPdf('board-eu', 'EU_Visibility_Board')">Download PDF</button>
+        <button class="secondary" onclick="printProof('board-eu')">Print for Proofread</button>
+        <button class="danger" onclick="clearText('board-eu')">Clear the text</button>
       </div>
     </section>
 
-    <!-- DUTCH ARTWORK (G) -->
+    <!-- Dutch board -->
     <section id="section-dutch" class="artwork-section">
       <div class="artwork-title">Dutch Visibility – ALP Middle &amp; Skill Centre</div>
-      <div class="artwork-note">Type in the fields; the artwork design stays exactly the same.</div>
+      <div class="artwork-note">Type on the lines; the magenta Dutch artwork stays as is.</div>
 
-      <div class="artwork-inner" id="artwork-dutch-inner">
-        <div class="artwork-top">
-          <img src="G-Header.svg" alt="Dutch Header" class="artwork-header-img" />
-        </div>
+      <div class="board-wrapper" id="board-dutch" style="background-image:url('G-.jpg');">
+        <!-- Row 1: Centre / District -->
+        <input class="board-input" style="top:58%; left:13%; width:34%;" />
+        <input class="board-input" style="top:58%; left:57%; width:30%;" />
 
-        <div class="artwork-middle">
-          <div class="logos-row">
-            <img src="G-Logos.svg" alt="Dutch Logos" />
-          </div>
-          <div class="programme-row">
-            <img src="G-Programme Name.svg" alt="ALP Middle & Skill Centre" />
-          </div>
+        <!-- Row 2: NFEMIS Code (left only) -->
+        <input class="board-input" style="top:64.5%; left:19%; width:30%;" />
 
-          <div class="fields-grid">
-            <div class="field-row">
-              <div class="field-label">Centre</div>
-              <input class="field-input" type="text" name="centre_g" placeholder="Enter centre name" />
-            </div>
+        <!-- Row 3: Skill (wide) -->
+        <input class="board-input" style="top:71.5%; left:13%; width:74%;" />
 
-            <div class="field-row">
-              <div class="field-label">District</div>
-              <input class="field-input" type="text" name="district_g" placeholder="Enter district" />
-            </div>
+        <!-- Row 4: Project Grant / Enrollment -->
+        <input class="board-input" style="top:78.5%; left:23%; width:25%;" />
+        <input class="board-input" style="top:78.5%; left:65%; width:23%;" />
 
-            <div class="field-row">
-              <div class="field-label">NFEMIS Code</div>
-              <input class="field-input" type="text" name="nfemis_g" placeholder="Enter NFEMIS code" />
-            </div>
-
-            <div class="field-row">
-              <div class="field-label">Enrollment</div>
-              <input class="field-input" type="text" name="enrollment_g" placeholder="Enter enrollment" />
-            </div>
-
-            <div class="field-row">
-              <div class="field-label">Skill</div>
-              <input class="field-input" type="text" name="skill_g" placeholder="Enter skill" />
-            </div>
-
-            <div class="field-row">
-              <div class="field-label">Project Grant</div>
-              <input class="field-input" type="text" name="grant_g" placeholder="Enter project grant" />
-            </div>
-
-            <div class="field-row full-width">
-              <div class="field-label">Nature of Work</div>
-              <input class="field-input" type="text" name="nature_g" placeholder="Enter nature of work" />
-            </div>
-          </div>
-        </div>
-
-        <div class="artwork-bottom">
-          <img src="G-Footer.svg" alt="Dutch Footer" class="artwork-footer-img" />
-        </div>
+        <!-- Row 5: Nature of Work -->
+        <input class="board-input" style="top:86%; left:23%; width:64%;" />
       </div>
 
       <div class="artwork-actions">
-        <button onclick="downloadPdf('artwork-dutch-inner', 'Dutch_Visibility_Board')">Download PDF</button>
-        <button class="secondary" onclick="printProof('artwork-dutch-inner')">Print for Proofread</button>
-        <button class="danger" onclick="clearText('artwork-dutch-inner')">Clear the text</button>
+        <button onclick="downloadPdf('board-dutch', 'Dutch_Visibility_Board')">Download PDF</button>
+        <button class="secondary" onclick="printProof('board-dutch')">Print for Proofread</button>
+        <button class="danger" onclick="clearText('board-dutch')">Clear the text</button>
       </div>
     </section>
 
@@ -370,7 +241,7 @@
   </div>
 
   <script>
-    // Switch between EU and Dutch sections
+    // Switch between EU and Dutch boards
     document.querySelectorAll(".visibility-buttons button").forEach((btn) => {
       btn.addEventListener("click", () => {
         const target = btn.dataset.target; // "eu" or "dutch"
@@ -380,16 +251,16 @@
       });
     });
 
-    // Clear all text fields in a given artwork
-    function clearText(containerId) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-      container.querySelectorAll("input.field-input").forEach(input => input.value = "");
+    // Clear all inputs on a board
+    function clearText(boardId) {
+      const board = document.getElementById(boardId);
+      if (!board) return;
+      board.querySelectorAll(".board-input").forEach(inp => inp.value = "");
     }
 
     // Download PDF using html2pdf
-    function downloadPdf(containerId, filename) {
-      const element = document.getElementById(containerId);
+    function downloadPdf(boardId, filename) {
+      const element = document.getElementById(boardId);
       if (!element || typeof html2pdf === "undefined") {
         alert("PDF tool not available. Use 'Print for Proofread' and choose 'Save as PDF'.");
         window.print();
@@ -397,19 +268,19 @@
       }
 
       const opt = {
-        margin: 5,
+        margin: 0,
         filename: filename + ".pdf",
         image: { type: "jpeg", quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: "pt", format: "a4", orientation: "landscape" },
+        jsPDF: { unit: "pt", format: "a4", orientation: "landscape" }
       };
 
       html2pdf().set(opt).from(element).save();
     }
 
-    // Print proof (also lets user save as PDF via browser)
-    function printProof(containerId) {
-      const element = document.getElementById(containerId);
+    // Print proof (also allows "Save as PDF" from browser)
+    function printProof(boardId) {
+      const element = document.getElementById(boardId);
       if (!element) return;
 
       const clone = element.cloneNode(true);
@@ -424,18 +295,15 @@
             <style>
               * { box-sizing: border-box; }
               body { margin: 0; padding: 0; }
-              .artwork-inner {
+              .board-wrapper {
                 width: 100%;
                 max-width: 1050px;
                 margin: 0 auto;
               }
-              input.field-input {
+              .board-input {
                 border: none;
-                border-bottom: 1px solid #666;
-                padding: 4px 2px 2px;
-                font-size: 14px;
-                font-family: inherit;
                 background: transparent;
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
               }
               @page {
                 size: A4 landscape;
